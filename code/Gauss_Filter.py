@@ -102,7 +102,7 @@ plt.imshow(u3, cmap=cm.jet, aspect='auto')                                   #: 
 ax4.axes.get_xaxis().set_ticks([])                                           #: hide ticks, in [] you can mark ticks want to show
 ax4.axes.get_yaxis().set_ticks([])
 plt.colorbar()                                                               #: create colormap related to data 
-plt.show()
+plt.show()                                                                   #: show result
 
 end = time.time()
 # calculate running-time
