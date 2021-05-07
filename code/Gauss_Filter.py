@@ -2,7 +2,6 @@ from scipy.ndimage import gaussian_filter
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
-import time
 import sys
 import os
 
@@ -71,6 +70,10 @@ def Rauheit_berechnen(data):
     rz = abs(np.mean(data.max(axis=0)-data.min(axis=0)))
     print("rz =", rz)
 
+def Nodes_show(filename):
+    with open(path + '/' +filename) as f1:
+        print("Nodes =", f1.readline())
+        
 # read data
 # data name
 path = sys.path[0]                                                             #: absolute path
@@ -79,12 +82,13 @@ for file in files:
     if file.endswith(".csv"):                                                  #: get the filename
         filename = file
         break 
-print(filename)                                                          
-data = np.genfromtxt(path + '/' + filename, delimiter=',')  
+
+Nodes_show(filename)                                                           #: show amount of nodes
+
+data = np.genfromtxt(path + '/' + filename, delimiter=',', skip_header=1)  
 koordinaten  = np.c_[data[:, 1], data[:, 2]]                                   #: Save als array, calculate faster
 verschiebung = data[:, 4]
 
-Node_berechnen(verschiebung)                                                   #: calculate amount of nodes
 
 # visualisation
 fig = plt.figure(figsize=(10, 10))                                             #: Height and width of figure, figure define
