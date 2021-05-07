@@ -40,13 +40,13 @@ def shape_matrix(data):
 def filter_oberflaesche(koordinaten, verschiebung):
     
     # gauss-filter
-    M, N = len_(koordinaten[:, 1]), len_(koordinaten[:, 2])
-    u3 = verschiebung[:, 4].reshape(N, M)
+    M, N = len_(koordinaten[:, 0]), len_(koordinaten[:, 1])
+    u3 = verschiebung[:].reshape(N, M)
     gauss_u3 = gaussian_filter(u3, sigma=4)                                    #: more sigma, more smoothness
     u3_g = u3 - gauss_u3
     
     # cut-off rand
-    data = np.c_[koordinaten[:, 1], koordinaten[:, 2], u3_g.reshape(-1, 1)]    #: no matter how many lines, 1 rank. Matrix created(x,y,u3_g)
+    data = np.c_[koordinaten[:, 0], koordinaten[:, 1], u3_g.reshape(-1, 1)]    #: no matter how many lines, 1 rank. Matrix created(x,y,u3_g)
     # cut-off size n = 5
     data = cut_off_rand(data, 5)
     [x, y, z] = shape_matrix(data)
@@ -71,8 +71,9 @@ def Rauheit_berechnen(data):
 # data name
 path = sys.path[0]                                                             #: absolute path
 filename = '\JobS4_OBERFLAECHE_OBERDECK.csv'
-koordinaten = np.genfromtxt(path + filename, delimiter=',')                    #: Save als array, calculate faster
-verschiebung = np.genfromtxt(path + filename, delimiter=',')
+data = np.genfromtxt(path + filename, delimiter=',')  
+koordinaten  = np.c_[data[:, 1], data[:, 2]]                  #: Save als array, calculate faster
+verschiebung = data[:, 4]
 
 # visualisation
 fig = plt.figure(figsize=(10, 10))                                             #: Height and width of figure, figure define
@@ -84,8 +85,8 @@ z_label = ['u3 [mm]', 'u3 [mm]', 'gefiltere Markierung u3 [mm]']
 sub_title = ['Oberfläche', 'Long Wave', 'gefiltere Oberfläche']
 
 # 1. subplot data
-[x_, y_, u3_] = shape_matrix(np.c_[koordinaten[:, 1], koordinaten[:, 2],       #: np_c: Data matrix created(x,y,u3)
-                                   verschiebung[:, 4]])
+[x_, y_, u3_] = shape_matrix(np.c_[koordinaten[:, 0], koordinaten[:, 1],       #: np_c: Data matrix created(x,y,u3)
+                                   verschiebung[:]])
 
 Rauheit_berechnen(u3_)                                                         #: calculate the surface roughness
 
@@ -95,7 +96,7 @@ Rauheit_berechnen(u3_)                                                         #
 # data for subplot 1 - 3
 x = [x_, x_, x]
 y = [y_, y_, y]
-z = [u3_, u3_gaussian, u3]
+z = [u3_[::-1, :], u3_gaussian[::-1, :], u3[::-1, :]]
 
 for i in range(1, 4):
     
@@ -113,4 +114,5 @@ plt.imshow(u3, cmap=cm.jet, aspect='auto')                                     #
 ax4.axes.get_xaxis().set_ticks([])                                             #: hide ticks, in [] you can mark ticks want to show
 ax4.axes.get_yaxis().set_ticks([])
 plt.colorbar()                                                                 #: create colormap related to data 
+
 plt.show()
