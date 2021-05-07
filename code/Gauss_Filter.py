@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 import time
 import sys
+import os
 
 np.set_printoptions(threshold=np.inf)                                          #: Matrix show entirely
 
@@ -52,6 +53,9 @@ def filter_oberflaesche(koordinaten, verschiebung):
     [x, y, z] = shape_matrix(data)
     return [x, y, z, gauss_u3]
 
+def Node_berechnen(data):
+    print("Nodes =", len(data))
+
 def Rauheit_berechnen(data):
     # Ra = 1/(m*n)*sum(|Z(xm, ym)-<Z>|)
     # <Z> = 1/(m*n)*sum(Z(xm, yn))
@@ -70,10 +74,17 @@ def Rauheit_berechnen(data):
 # read data
 # data name
 path = sys.path[0]                                                             #: absolute path
-filename = '\JobS4_OBERFLAECHE_OBERDECK.csv'
-data = np.genfromtxt(path + filename, delimiter=',')  
-koordinaten  = np.c_[data[:, 1], data[:, 2]]                  #: Save als array, calculate faster
+files = os.listdir(path)
+for file in files:
+    if file.endswith(".csv"):                                                  #: get the filename
+        filename = file
+        break 
+print(filename)                                                          
+data = np.genfromtxt(path + '/' + filename, delimiter=',')  
+koordinaten  = np.c_[data[:, 1], data[:, 2]]                                   #: Save als array, calculate faster
 verschiebung = data[:, 4]
+
+Node_berechnen(verschiebung)                                                   #: calculate amount of nodes
 
 # visualisation
 fig = plt.figure(figsize=(10, 10))                                             #: Height and width of figure, figure define
