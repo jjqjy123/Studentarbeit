@@ -28,8 +28,8 @@ Laenge_Waben = 50
 Dicke_Waben  = 15
 Dicke_Papier = 0.3
 Distanz = 2*Ampitude_Waben-0.1      #: Distanz zwischen Wabenschichten
-PartMeshsize_Waben = 0.4
-Dickseednummer_Waben = 30
+PartMeshsize_Waben = 0.5
+Dickseednummer_Waben = 20
 # ---------------------------------------------------------------------------------
 ############################ Beginn des Modellaufbau ##############################
 mdb.Model(name='S4', modelType=STANDARD_EXPLICIT)     # Neu-Modell
@@ -53,7 +53,7 @@ for Schicht_Nummer in range(0, Schichiten_Waben):
     y_Symmetrieachse = Distanz*Schicht_Nummer               #: Position von y_Symmetrieachs in diese Schicht
     while (x <= Laenge_Waben):
         y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x - T*Randomphase_Liste[Schicht_Nummer])
-        if y - y_Symmetrieachse >= Distanz/2 or abs(y - y_Symmetrieachse - Distanz/2)<=0.01:
+        if y - y_Symmetrieachse >= Distanz/2 or abs(y - y_Symmetrieachse - Distanz/2)<=0.015:
             Punkt_Liste[Schicht_Nummer].append((x, Distanz/2 + y_Symmetrieachse))
             if len(Punkt_Liste[Schicht_Nummer])>2:
                 Model.sketches['__profile__'].Spline(points=Punkt_Liste[Schicht_Nummer])
@@ -64,7 +64,7 @@ for Schicht_Nummer in range(0, Schichiten_Waben):
             Punkt_Liste[Schicht_Nummer].append((x, Distanz/2 + y_Symmetrieachse))
             x += Aufloesung
             continue
-        elif y - y_Symmetrieachse <= -Distanz/2 or abs(y - y_Symmetrieachse + Distanz/2)<=0.01:
+        elif y - y_Symmetrieachse <= -Distanz/2 or abs(y - y_Symmetrieachse + Distanz/2)<=0.015:
             Punkt_Liste[Schicht_Nummer].append((x, -Distanz/2 + y_Symmetrieachse))
             if len(Punkt_Liste[Schicht_Nummer])>2:
                 Model.sketches['__profile__'].Spline(points=Punkt_Liste[Schicht_Nummer])
