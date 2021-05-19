@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 import sys
 import os
+from mpl_toolkits.mplot3d import Axes3D
 
 np.set_printoptions(threshold=np.inf)                                          #: Matrix show entirely
 
