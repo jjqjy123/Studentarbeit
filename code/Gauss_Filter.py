@@ -6,12 +6,9 @@ import sys
 import os
 from mpl_toolkits.mplot3d import Axes3D
 
-np.set_printoptions(threshold=np.inf)                                          #: Matrix show entirely
-
-def reshape_(M, N):
-    
+def reshape_(N, M):   
     # data reshape to mesh 
-    return lambda a : a.reshape(M, N)                                          #: Parameter x,y,z reshape to M*N(mesh)
+    return lambda a : a.reshape(N, M)                                          #: Parameter x,y,z reshape to M*N(mesh)
 
 def len_(x):
     return int(len(np.unique(np.array(x.round(6)))))                           #: np.round + np.unique. must np.array???
@@ -52,28 +49,6 @@ def filter_oberflaesche(koordinaten, verschiebung):
     data = cut_off_rand(data, 5)
     [x, y, z] = shape_matrix(data)
     return [x, y, z, gauss_u3]
-
-def Node_berechnen(data):
-    print("Nodes =", len(data))
-
-def Rauheit_berechnen(data):
-    # Ra = 1/(m*n)*sum(|Z(xm, ym)-<Z>|)
-    # <Z> = 1/(m*n)*sum(Z(xm, yn))
-    ra = np.mean(abs(data-np.mean(data))) 
-    print("ra =", ra)
-    # Rp = mean(max(column(Zm,n)))
-    rp = np.mean(data.max(axis=0))
-    print("rp =", rp)
-    # Rv = mean(min(column(Zm,n)))
-    rv = abs(np.mean(data.min(axis=0)))
-    print("rv =", rv)
-    # Rz = mean(|max(column(Zm,n)|+|min(column(Zm,n))|)
-    rz = abs(np.mean(data.max(axis=0)-data.min(axis=0)))
-    print("rz =", rz)
-
-def Nodes_show(filename):
-    with open(path + '/' +filename) as f1:
-        print("Nodes =", f1.readline())
         
 # read data
 # data name
@@ -83,8 +58,6 @@ for file in files:
     if file.endswith(".csv"):                                                  #: get the filename
         filename = file
         break 
-
-Nodes_show(filename)                                                           #: show amount of nodes
 
 data = np.genfromtxt(path + '/' + filename, delimiter=',', skip_header=1)  
 koordinaten  = np.c_[data[:, 1], data[:, 2]]                                   #: Save als array, calculate faster
@@ -104,7 +77,6 @@ sub_title = ['Oberfläche', 'Long Wave', 'gefiltere Oberfläche']
 [x_, y_, u3_] = shape_matrix(np.c_[koordinaten[:, 0], koordinaten[:, 1],       #: np_c: Data matrix created(x,y,u3)
                                    verschiebung[:]])
 
-Rauheit_berechnen(u3_)                                                         #: calculate the surface roughness
 
 # 2. & 3. subplot data
 [x, y, u3, u3_gaussian] = filter_oberflaesche(koordinaten, verschiebung)
