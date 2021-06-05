@@ -19,7 +19,7 @@ def set_U_Output(name_ODB, name_Set, file):
     Verschiebung = FOdb.steps['Expansion'].frames[-1].fieldOutputs['U']       # :-1 means the last frame(1 is also OK here),fieldOutputs to return values of displacements
     Verschiebung_Set = Verschiebung.getSubset(region=fieldoutput_node)        #: get values of Set-Output
 
-    csv_name = name_ODB.rsplit('\\', 1)[1].split('.')[0] + '.csv'
+    csv_name = name_ODB.rsplit('\\', 1)[1].rsplit('.', 1)[0] + '.csv'
     with open(file+'\\'+csv_name, 'w+') as f1:
         f1.write(str(numnodes))
         f1.write('\n')
