@@ -25,7 +25,7 @@ def filter_oberflaesche(koordinaten, verschiebung):
     # gauss-filter
     M, N = len_(koordinaten[:, 0]), len_(koordinaten[:, 1])                    #: length and width of decke
     u3 = verschiebung[:].reshape(N, M)
-    gauss_u3 = gaussian_filter(u3, sigma=4)                                    #: more sigma, more smoothness
+    gauss_u3 = gaussian_filter(u3, sigma=10)                                   #: more sigma, more smoothness
     u3_g = u3 - gauss_u3
     
     # cut-off rand
@@ -33,19 +33,35 @@ def filter_oberflaesche(koordinaten, verschiebung):
     # cut-off size n = 5
     data = cut_off_rand(data,10)
     M, N = len_(data[:, 0]), len_(data[:, 1])                                  #: python can assign many values at the same time   
-    x = data[:, 0].reshape(N, M)          
+    x = data[:, 0].reshape(N, M)  
+    y = data[:, 1].reshape(N, M)         
     z = data[:, 2].reshape(N, M)
-    return x, z
+    return x, y, z 
 
-def Plot(x, y):
+def Plot(x, y,z):
     plt.subplots(figsize=(9,7))
     plt.xlabel("x [mm]", fontsize=10)                                                 #: set x and y label
     plt.ylabel("U3 [mm]", fontsize=10)
-    plt.title("Plot", fontsize=10, fontweight='bold')   
-    x_data = x[len(x)//2]
-    y_data = y[len(y)//2]
-    plt.plot(x_data, y_data)
-    print(max(y_data) - min(y_data))
+    plt.title("Plot", fontsize=10, fontweight='bold')  
+#    maxs = 0 
+#    id = 0
+#    for i in range(len(x)):
+#       x_data = x[i]
+#        y_data = y[i]
+#        delta = max(y_data) - min(y_data)
+#        if delta >maxs:
+#            maxs = delta
+#            id = i
+#    x_data = x[id]
+#    y_data = y[id]
+#    print(id)
+   
+    id = len(x)//2
+    x_data = x[id]
+    y_data = y[id]
+    z_data = z[id]
+    plt.plot(x_data, z_data)
+    print(max(z_data) - min(z_data))
     plt.show()
 
 def Calculate(filename):
@@ -54,8 +70,8 @@ def Calculate(filename):
     koordinaten  = np.c_[data[:, 1], data[:, 2]]                                   #: Save als array, calculate faster
     verschiebung = data[:, 4]
 
-    x_data, u3_Rauheit = filter_oberflaesche(koordinaten, verschiebung)
-    Plot(x_data, u3_Rauheit)
+    x_data, y_data,u3_Rauheit = filter_oberflaesche(koordinaten, verschiebung)
+    Plot(x_data, y_data,u3_Rauheit)
 
 
 # read data
