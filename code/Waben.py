@@ -20,15 +20,15 @@ import os
 # ---------------------------------------------------------------------------------
 ######################## Parameter von Modell einstellen ##########################
 # Dimensionen der Waben
-Schichiten_Waben = 8                #: Menge der Schichiten von Wabenpart
-Ampitude_Waben = 3                  #: Ampitude von Waben
+Schichiten_Waben = 12                #: Menge der Schichiten von Wabenpart
+Ampitude_Waben = 2.55                  #: Ampitude von Waben
 T = 10                              #: Periode von Wabenschichten
 Aufloesung   = 0.2                  #: Praezision
 Laenge_Waben = 50
 Dicke_Waben  = 15
-Dicke_Papier = 0.3
+Dicke_Papier = 0.15
 Distanz = 2*Ampitude_Waben-0.1      #: Distanz zwischen Wabenschichten
-PartMeshsize_Waben = 0.5
+PartMeshsize_Waben = 0.25
 Dickseednummer_Waben = 20
 # ---------------------------------------------------------------------------------
 ############################ Beginn des Modellaufbau ##############################
@@ -40,6 +40,8 @@ Assembly = Model.rootAssembly
 random.seed(0)
 Randomphase_Liste = []                                #: um die zufaellige Anfangsphase von allen Wabenschichten zu speichern
 Punkt_Liste = []                                      #: um die Punkte von allen Wabenschichten zu speichern
+phi_Liste = [1.570796327, 3, 0.253307537, 1.199347947, 0.779611209, 2.400205441, 1.2942414, 2.731942783,
+0.545541085, 0.79140875, 0.436616941, 0.408205676]
 # ---------------------------------------------------------------------------------
 #: Modell aufbauen
 #: Wabenpart
@@ -52,7 +54,8 @@ for Schicht_Nummer in range(0, Schichiten_Waben):
     x = 0
     y_Symmetrieachse = Distanz*Schicht_Nummer               #: Position von y_Symmetrieachs in diese Schicht
     while (x <= Laenge_Waben):
-        y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x - T*Randomphase_Liste[Schicht_Nummer])
+#       y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x - T*Randomphase_Liste[Schicht_Nummer])
+        y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x + phi_Liste[Schicht_Nummer])
         if y - y_Symmetrieachse >= Distanz/2 or abs(y - y_Symmetrieachse - Distanz/2)<=0.015:
             Punkt_Liste[Schicht_Nummer].append((x, Distanz/2 + y_Symmetrieachse))
             if len(Punkt_Liste[Schicht_Nummer])>2:
@@ -60,7 +63,8 @@ for Schicht_Nummer in range(0, Schichiten_Waben):
             Punkt_Liste[Schicht_Nummer] = []
             while (y - y_Symmetrieachse >= Distanz/2) and (x <= Laenge_Waben):
                 x += Aufloesung
-                y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x - T*Randomphase_Liste[Schicht_Nummer])
+#                y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x - T*Randomphase_Liste[Schicht_Nummer])
+                y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x + phi_Liste[Schicht_Nummer])
             Punkt_Liste[Schicht_Nummer].append((x, Distanz/2 + y_Symmetrieachse))
             x += Aufloesung
             continue
@@ -71,14 +75,16 @@ for Schicht_Nummer in range(0, Schichiten_Waben):
             Punkt_Liste[Schicht_Nummer] = []
             while (y - y_Symmetrieachse <= -Distanz/2) and (x <= Laenge_Waben):
                 x += Aufloesung
-                y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x - T*Randomphase_Liste[Schicht_Nummer])
+#                y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x - T*Randomphase_Liste[Schicht_Nummer])
+                y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x + phi_Liste[Schicht_Nummer])
             Punkt_Liste[Schicht_Nummer].append((x, -Distanz/2 + y_Symmetrieachse))
             x += Aufloesung
             continue
         Punkt_Liste[Schicht_Nummer].append((x, y))          #: Punkte von Wabenschicht in entsprechender Punktliste speichern
         x += Aufloesung
         if (x >= Laenge_Waben) and (y - y_Symmetrieachse > -Distanz/2) and (y - y_Symmetrieachse < Distanz/2): 
-            y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x - T*Randomphase_Liste[Schicht_Nummer])
+#           y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x - T*Randomphase_Liste[Schicht_Nummer])
+            y = y_Symmetrieachse + Ampitude_Waben * math.sin(2*math.pi/T*x + phi_Liste[Schicht_Nummer])
             Punkt_Liste[Schicht_Nummer].append((x, y))         
             Model.sketches['__profile__'].Spline(points=Punkt_Liste[Schicht_Nummer])
             break

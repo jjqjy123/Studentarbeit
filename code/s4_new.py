@@ -168,14 +168,14 @@ Model.HomogeneousShellSection(name='Oberdecke', material='Aussenlage', thickness
 face_Deck_O = Part_Deck_O.faces
 Part_Deck_O.Set(faces=face_Deck_O, name='Set-Deck_O')
 region = Part_Deck_O.sets['Set-Deck_O']
-Part_Deck_O.SectionAssignment(region=region, sectionName='Oberdecke', offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
+Part_Deck_O.SectionAssignment(region=region, sectionName='Oberdecke', offset=0.0, offsetType=BOTTOM_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
 
 # Unterdeck
 Model.HomogeneousShellSection(name='Unterdecke', material='Deckmaterial', thickness=Dicken_Deckschicht)
 face_Deck_U = Part_Deck_U.faces
 Part_Deck_U.Set(faces=face_Deck_U, name='Set-Deck_U')
 region = Part_Deck_U.sets['Set-Deck_U']
-Part_Deck_U.SectionAssignment(region=region, sectionName='Unterdecke', offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
+Part_Deck_U.SectionAssignment(region=region, sectionName='Unterdecke', offset=0.0, offsetType=TOP_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
 
 # ---------------------------------------------------------------------------------
 
